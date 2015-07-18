@@ -22,8 +22,13 @@ class ruby {
   }
 }
 
+class nginx {
+  package { 'nginx':
+    ensure => 'installed'
+  }
 
-#class { 'nginx': }
-#nginx::vhost {'streamer':
-#  template=>'nginx.conf.erb'
-#}
+  class { 'nginx': }
+  nginx::vhost {'streamer':
+    template=>'nginx.conf.erb'
+  }
+}
