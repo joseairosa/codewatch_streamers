@@ -12,14 +12,17 @@ file { "/home/streamer":
 
 }
 
-include ruby
-include nginx
+class ruby {
+  package { 'ruby':
+    ensure => 'installed'
+  }
+}
 
 class { 'ruby':
   gems_version  => 'latest'
 }
 
-class { 'nginx': }
-nginx::vhost {'streamer':
-  template=>'nginx.conf.erb'
-}
+#class { 'nginx': }
+#nginx::vhost {'streamer':
+#  template=>'nginx.conf.erb'
+#}
