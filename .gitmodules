@@ -1,0 +1,6 @@
+[submodule "config/puppet/modules/puppet-nginx"]
+	path = config/puppet/modules/puppet-nginx
+	url = https://github.com/jfryman/puppet-nginx.git
+[submodule "config/puppet/modules/puppetlabs-ruby"]
+	path = config/puppet/modules/puppetlabs-ruby
+	url = https://github.com/puppetlabs/puppetlabs-ruby.git

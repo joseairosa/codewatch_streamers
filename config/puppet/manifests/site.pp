@@ -12,8 +12,6 @@ file { "/home/streamer":
 
 }
 
-include ruby
-
 class { 'ruby':
   gems_version  => 'latest'
 }
