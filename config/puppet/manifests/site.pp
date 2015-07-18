@@ -12,7 +12,12 @@ file { "/home/streamer":
 
 }
 
+package { 'puppetlabs-ruby':
+  ensure => installed,
+}
+
 class { 'ruby':
+  version => '2.2.1',
   gems_version  => 'latest'
 }
 

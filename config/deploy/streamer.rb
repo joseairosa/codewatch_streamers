@@ -20,6 +20,17 @@ namespace :server do
     puts "server started at #{server.dns_name}"
   end
 
+  desc 'Setup server'
+  task :setup do
+    on roles(:app) do
+      execute 'sudo apt-get update'
+      execute 'sudo apt-get -y upgrade'
+      execute 'sudo apt-get -y install git puppet locate build-essential libpcre3 libpcre3-dev libssl-dev unzip yasm libass-dev software-properties-common python-pip libxml2 libxml2-dev libxslt1-dev vim htop libav-tools libavcodec-extra-54 libavformat-extra-54'
+      # execute 'puppet module install puppetlabs-ruby'
+      # execute 'puppet module install jfryman-nginx'
+    end
+  end
+
   desc 'Drops a specific streamer server'
   task :drop do
     if (server = fog.servers.detect { |s| s.dns_name == ec2_address })
