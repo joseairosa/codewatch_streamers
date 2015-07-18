@@ -12,8 +12,8 @@ file { "/home/streamer":
 
 }
 
-package { 'puppetlabs-ruby':
-  ensure => installed,
+package { 'ruby':
+  ensure => 'installed',
 }
 
 class { 'ruby':
