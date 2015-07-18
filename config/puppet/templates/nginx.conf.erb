@@ -1,0 +1,151 @@
+user  nginx;
+worker_processes  1;
+
+#error_log  logs/error.log;
+#error_log  logs/error.log  notice;
+#error_log  logs/error.log  info;
+
+#pid        logs/nginx.pid;
+
+
+events {
+  worker_connections  1024;
+}
+
+
+http {
+  include       mime.types;
+  default_type  application/octet-stream;
+
+  #log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+  #                  '$status $body_bytes_sent "$http_referer" '
+  #                  '"$http_user_agent" "$http_x_forwarded_for"';
+
+  #access_log  logs/access.log  main;
+
+  sendfile        on;
+  #tcp_nopush     on;
+
+  #keepalive_timeout  0;
+  keepalive_timeout  65;
+
+  #gzip  on;
+
+  server {
+    listen       80;
+    server_name  localhost;
+
+    #charset koi8-r;
+
+    #access_log  logs/host.access.log  main;
+
+    location / {
+      root   html;
+      index  index.html index.htm;
+    }
+
+    location ~ \.php$ {
+      try_files $uri =404;
+      fastcgi_pass unix:/var/run/php5-fpm.sock;
+      fastcgi_index index.php;
+      fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+      include fastcgi_params;
+    }
+
+    location /stats {
+      #            allow 127.0.0.1;
+      #            deny all;
+      rtmp_stat all;
+      rtmp_stat_stylesheet stat.xsl;
+    }
+
+    location /subscribers {
+      proxy_pass http://127.0.0.1/stats;
+      xslt_stylesheet /usr/local/nginx/html/nclients.xsl app='$arg_app' name='$arg_name';
+      #add_header Refresh "3; $request_uri";
+    }
+
+    location /control {
+      rtmp_control all;
+    }
+
+    #  location /stat.xsl {
+    #            root /path/to/stat/xsl/file;
+    #        }
+
+    #error_page  404              /404.html;
+
+    # redirect server error pages to the static page /50x.html
+    #
+    error_page   500 502 503 504  /50x.html;
+      location = /50x.html {
+      root   html;
+    }
+
+    # proxy the PHP scripts to Apache listening on 127.0.0.1:80
+    #
+    #location ~ \.php$ {
+    #    proxy_pass   http://127.0.0.1;
+    #}
+
+    # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+    #
+    #location ~ \.php$ {
+    #    root           html;
+    #    fastcgi_pass   127.0.0.1:9000;
+    #    fastcgi_index  index.php;
+    #    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
+    #    include        fastcgi_params;
+    #}
+
+    # deny access to .htaccess files, if Apache's document root
+    # concurs with nginx's one
+    #
+    #location ~ /\.ht {
+    #    deny  all;
+    #}
+  }
+}
+
+rtmp {
+  server {
+    listen 1935;
+    chunk_size 4096;
+
+    application stream {
+      live on;
+      record keyframes;
+      record_max_frames 1;
+      record_path /var/images/stream_thumbnails;
+      record_interval 60s;
+      exec_record_done /usr/local/bin/stream_record_done.sh $name;
+      on_publish http://codewatch.tv/api/v1/stream/event/publish;
+      on_publish_done http://codewatch.tv/api/v1/stream/event/publish_done;
+      exec ffmpeg -re -threads 0 -i rtmp://localhost/stream/$name -crf 28 -g 60 -preset veryfast -c:v libx264 -profile:v main -b:v 960K -maxrate 960K -bufsize 960K -s 1280x720 -f flv -c:a aac -ac 1 -strict -2 -b:a 128k rtmp://localhost/watch/$name@720p -crf 28 -g 60 -preset veryfast -c:v libx264 -profile:v main -b:v 480K -maxrate 480K -bufsize 480K -s 640x360 -f flv -c:a aac -ac 1 -strict -2 -b:a 56k rtmp://localhost/watch/$name@320p -crf 28 -g 60 -preset veryfast -c:v libx264 -profile:v main -b:v 240K -maxrate 240K -bufsize 240K -s 320x180 -f flv -c:a aac -ac 1 -strict -2 -b:a 56k rtmp://localhost/watch/$name@180p 2>>/var/log/ffmpeg/ffmpeg-$name.log;
+    }
+
+    application record {
+      allow publish 127.0.0.1;
+      deny publish all;
+      live on;
+      exec_record_done /usr/local/bin/record_record_done.sh $path $filename $basename;
+      on_record_done http://codewatch.tv/api/v1/stream/new_recording;
+      record all;
+      record_path /tmp;
+      record_suffix -%d-%b-%y-%T.flv;
+    }
+
+    application vod {
+      play /var/recordings;
+      on_play http://codewatch.tv/api/v1/recording/event/play;
+      on_play_done http://codewatch.tv/api/v1/recording/event/play_done;
+    }
+
+    application watch {
+      live on;
+      record off;
+      on_play http://codewatch.tv/api/v1/stream/event/play;
+      on_play_done http://codewatch.tv/api/v1/stream/event/play_done;
+    }
+  }
+}
