@@ -12,6 +12,9 @@ file { "/home/streamer":
 
 }
 
+include ruby
+include nginx
+
 class { 'ruby':
   gems_version  => 'latest'
 }
