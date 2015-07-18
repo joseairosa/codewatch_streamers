@@ -16,11 +16,12 @@ class ruby {
   package { 'ruby':
     ensure => 'installed'
   }
+
+  class { 'ruby':
+    gems_version  => 'latest'
+  }
 }
 
-class { 'ruby':
-  gems_version  => 'latest'
-}
 
 #class { 'nginx': }
 #nginx::vhost {'streamer':
