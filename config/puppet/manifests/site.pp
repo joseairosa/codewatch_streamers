@@ -12,12 +12,9 @@ file { "/home/streamer":
 
 }
 
-package { 'ruby':
-  ensure => 'installed',
-}
+include ruby
 
 class { 'ruby':
-  version => '2.2.1',
   gems_version  => 'latest'
 }
 
