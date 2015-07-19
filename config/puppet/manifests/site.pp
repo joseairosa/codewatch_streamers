@@ -124,24 +124,24 @@ class s3fs {
 }
 
 class mount_s3fs {
+  exec { 'unmount s3fs':
+    command => '/usr/bin/env sudo fusermount -u /mnt/s3',
+    require => Class['s3fs'],
+    before => File['/mnt/s3']
+  }
+
   file { "/mnt/s3":
     ensure => "directory",
     owner  => "ubuntu",
     group  => "ubuntu",
     mode   => 755,
-    before => Exec['mount s3fs'],
-    require => Class['s3fs']
-  }
-
-  exec { 'unmount s3fs':
-    command => '/usr/bin/env sudo fusermount -u /mnt/s3',
-    before => Exec['mount s3fs'],
-    require => File['/mnt/s3']
+    require => Exec['unmount s3fs'],
+    before => Exec['mount s3fs']
   }
 
   exec { 'mount s3fs':
     command => '/usr/bin/env sudo /usr/bin/s3fs codewatch-tv /mnt/s3 -o use_rrs -o allow_other -o use_cache=/tmp',
-    require => Exec['unmount s3fs']
+    require => Exec["/mnt/s3"]
   }
 }
 
