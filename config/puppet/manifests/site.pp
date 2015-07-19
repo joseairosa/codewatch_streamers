@@ -73,7 +73,24 @@ class build {
   exec { 'configure nginx':
     cwd     => '/home/streamer/downloads/nginx-1.8.0',
     command => '/usr/bin/env sudo /home/streamer/downloads/nginx-1.8.0/configure --with-http_xslt_module --with-http_ssl_module --add-module=/home/streamer/downloads/nginx-rtmp-module-master',
+    before  => Exec["make nginx"]
+  }
+
+  exec { 'make nginx':
+    cwd     => '/home/streamer/downloads/nginx-1.8.0',
+    command => '/usr/bin/env sudo make',
+    before  => Exec["make install nginx"]
+  }
+
+  exec { 'make install nginx':
+    cwd     => '/home/streamer/downloads/nginx-1.8.0',
+    command => '/usr/bin/env sudo make install',
     before  => File["/etc/nginx/nginx.conf"]
+  }
+
+  file { "/etc/nginx/nginx.conf":
+    content => template('nginx.conf.erb'),
+    before  => Exec['restart nginx']
   }
 
   file { "/usr/local/nginx/html/nclients.xsl":
@@ -93,11 +110,6 @@ class build {
 
   file { "/usr/local/bin/record_record_done.sh":
     content => template('record_record_done.sh'),
-    before  => Exec['restart nginx']
-  }
-
-  file { "/etc/nginx/nginx.conf":
-    content => template('nginx.conf.erb'),
     before  => Exec['restart nginx']
   }
 
