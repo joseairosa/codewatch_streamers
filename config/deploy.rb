@@ -1,26 +1,5 @@
 require 'capistrano/puppetize'
 
-def find_servers
-  @servers ||= fog.servers.select { |s| s.tags['Name'] == 'streamer' }
-end
-
-def find_load_balancers
-  @load_balancers ||= fog.servers.select { |s| s.tags['Name'] == 'load-balancer' }
-end
-
-def servers_to_update
-  if ENV['server_to_update']
-    server = (find_servers + find_load_balancers).find { |s| s.dns_name == ENV['server_to_update']}
-    if server
-      return ["ubuntu@#{server.dns_name}"]
-    else
-      raise ArgumentError, 'ServerNotFound'
-    end
-  else
-    find_servers.map { |s| "ubuntu@#{s.dns_name}" }
-  end
-end
-
 def fog
   @fog ||= Fog::Compute.new(
       provider: 'AWS',
@@ -28,6 +7,40 @@ def fog
       aws_access_key_id: ENV['CODEWATCH_AWS_ACCESS_KEY_ID'],
       aws_secret_access_key: ENV['CODEWATCH_AWS_SECRET_ACCESS_KEY']
   )
+end
+
+def find_servers
+  @servers ||= fog.servers.select { |s| s.tags['Name'] == 'streamer' }
+end
+
+def find_load_balancer_servers
+  @load_balancers ||= fog.servers.select { |s| s.tags['Name'] == 'load-balancer' }
+end
+
+def find_vod_servers
+  @vod ||= fog.servers.select { |s| s.tags['Name'] == 'vod' }
+end
+
+def servers_to_update
+  if ENV['server']
+    server = (find_servers + find_load_balancer_servers + find_vod_servers).find { |s| s.dns_name == ENV['server']}
+    if server
+      return ["#{fetch(:user)}@#{server.dns_name}"]
+    else
+      raise ArgumentError, 'ServerNotFound'
+    end
+  elsif ENV['server_type']
+    case ENV['server_type']
+      when 'streamer'
+        find_servers.map { |s| "#{fetch(:user)}@#{s.dns_name}" }
+      when 'load_balancer'
+        find_load_balancer_servers.map { |s| "#{fetch(:user)}@#{s.dns_name}" }
+      when 'vod'
+        find_vod_servers.map { |s| "#{fetch(:user)}@#{s.dns_name}" }
+    end
+  else
+    (find_servers + find_load_balancer_servers + find_vod_servers).map { |s| "#{fetch(:user)}@#{s.dns_name}" }
+  end
 end
 
 set :application, 'codewatch_streamer'
