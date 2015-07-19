@@ -26,8 +26,10 @@ namespace :server do
       execute 'sudo apt-get update'
       execute 'sudo apt-get -y upgrade'
       execute 'sudo apt-get -y install git puppet locate build-essential libpcre3 libpcre3-dev libssl-dev unzip yasm libass-dev software-properties-common python-pip libxml2 libxml2-dev libxslt1-dev vim htop libav-tools libavcodec-extra-54 libavformat-extra-54'
-      # execute 'puppet module install puppetlabs-ruby'
-      # execute 'puppet module install jfryman-nginx'
+      execute 'sudo add-apt-repository -y ppa:nginx/stable'
+      execute 'sudo apt-get update'
+      execute 'sudo apt-get install -y nginx=1.8.0-1~trusty'
+      execute 'sudo puppet module install maestrodev-wget'
     end
   end
 

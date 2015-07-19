@@ -1,7 +1,6 @@
 GIT
-  remote: git@github.com:simplybusiness/capistrano-ext-puppetize.git
-  revision: 1ceb95fea34a2c000b8ca957084389efef025ab1
-  tag: 1.0.0
+  remote: git@github.com:joseairosa/capistrano-ext-puppetize.git
+  revision: 09e2800cf2c49ff03e7c9c149ce1d4b135850ffa
   specs:
     capistrano-ext-puppetize (1.0.0)
       capistrano (= 3.1)
