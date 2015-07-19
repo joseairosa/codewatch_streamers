@@ -243,16 +243,14 @@ class streamer {
     content => template('stream_record_done.sh'),
     owner   => "ubuntu",
     group   => "ubuntu",
-    mode    => 755,
-    before  => Exec['restart nginx']
+    mode    => 755
   }
 
   file { "/usr/local/bin/record_record_done.sh":
     content => template('record_record_done.sh'),
     owner   => "ubuntu",
     group   => "ubuntu",
-    mode    => 755,
-    before  => Exec['restart nginx']
+    mode    => 755
   }
 }
 
