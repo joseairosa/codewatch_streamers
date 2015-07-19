@@ -10,7 +10,7 @@ namespace :server do
         key_name: fetch(:key_pair),
         vpc_id: 'vpc-14dd5271',
         subnet_id: 'subnet-15bdc570',
-        availability_zone: fetch(:region),
+        availability_zone: fetch(:instance_region),
         tags: {'Name' => Bazaar.heroku, 'Group' => 'lb'}
     )
 
