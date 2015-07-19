@@ -96,7 +96,7 @@ class build {
     before  => File["/etc/nginx/nginx.conf"]
   }
 
-  file { "/etc/nginx/nginx.conf":
+  file { "/usr/local/nginx/conf/nginx.conf":
     content => template('nginx.conf.erb'),
     before  => Exec['restart nginx']
   }
