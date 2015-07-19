@@ -1,3 +1,8 @@
+user { 'nginx':
+  name => 'nginx',
+  groups  => ["ubuntu"]
+}
+
 file { "/var/images":
   ensure => "directory",
   owner  => "ubuntu",
