@@ -187,7 +187,7 @@ class vod {
     cwd     => '/home/ubuntu/downloads/s3fs-fuse',
     command => '/usr/bin/env sudo /home/ubuntu/downloads/s3fs-fuse/configure --prefix=/usr --with-openssl',
     require => Exec['s3fs ./autogen.sh'],
-    before  => Exec['s3fs ./configure']
+    before  => Exec['make s3fs']
   }
 
   exec { 'make s3fs':
