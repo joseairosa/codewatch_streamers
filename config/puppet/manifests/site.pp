@@ -18,7 +18,7 @@ file { "/var/images/recording_thumbnails":
   ensure => "directory",
   owner  => "ubuntu",
   group  => "ubuntu",
-  mode   => 755 ,
+  mode   => 755,
   before => Class['build']
 }
 
@@ -26,7 +26,7 @@ file { "/var/recordings":
   ensure => "directory",
   owner  => "ubuntu",
   group  => "ubuntu",
-  mode   => 755 ,
+  mode   => 755,
   before => Class['build']
 }
 
@@ -34,7 +34,15 @@ file { "/home/ubuntu/downloads":
   ensure => "directory",
   owner  => "ubuntu",
   group  => "ubuntu",
-  mode   => 755 ,
+  mode   => 755,
+  before => Class['build']
+}
+
+file { "/var/log/ffmpeg":
+  ensure => "directory",
+  owner  => "ubuntu",
+  group  => "ubuntu",
+  mode   => 777,
   before => Class['build']
 }
 
@@ -95,9 +103,9 @@ class build {
 
   file { "/usr/local/nginx/html/nclients.xsl":
     content => template('nclients.xsl'),
-    owner  => "ubuntu",
-    group  => "ubuntu",
-    mode   => 755,
+    owner   => "ubuntu",
+    group   => "ubuntu",
+    mode    => 755,
     before  => Exec['restart nginx']
   }
 
@@ -108,17 +116,17 @@ class build {
 
   file { "/usr/local/bin/stream_record_done.sh":
     content => template('stream_record_done.sh'),
-    owner  => "ubuntu",
-    group  => "ubuntu",
-    mode   => 755,
+    owner   => "ubuntu",
+    group   => "ubuntu",
+    mode    => 755,
     before  => Exec['restart nginx']
   }
 
   file { "/usr/local/bin/record_record_done.sh":
     content => template('record_record_done.sh'),
-    owner  => "ubuntu",
-    group  => "ubuntu",
-    mode   => 755,
+    owner   => "ubuntu",
+    group   => "ubuntu",
+    mode    => 755,
     before  => Exec['restart nginx']
   }
 
