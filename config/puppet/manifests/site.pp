@@ -93,7 +93,7 @@ class build {
   exec { 'make install nginx':
     cwd     => '/home/ubuntu/downloads/nginx-1.8.0',
     command => '/usr/bin/env sudo make install',
-    before  => File["/etc/nginx/nginx.conf"]
+    before  => File["/usr/local/nginx/conf/nginx.conf"]
   }
 
   file { "/usr/local/nginx/conf/nginx.conf":
