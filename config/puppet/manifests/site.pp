@@ -2,7 +2,7 @@ file { "/var/images":
   ensure => "directory",
   owner  => "ubuntu",
   group  => "ubuntu",
-  mode   => 755,
+  mode   => 777,
   before => Class['build']
 }
 
@@ -10,7 +10,7 @@ file { "/var/images/stream_thumbnails":
   ensure => "directory",
   owner  => "ubuntu",
   group  => "ubuntu",
-  mode   => 755,
+  mode   => 777,
   before => Class['build']
 }
 
@@ -18,7 +18,7 @@ file { "/var/images/recording_thumbnails":
   ensure => "directory",
   owner  => "ubuntu",
   group  => "ubuntu",
-  mode   => 755,
+  mode   => 777,
   before => Class['build']
 }
 
@@ -26,7 +26,7 @@ file { "/var/recordings":
   ensure => "directory",
   owner  => "ubuntu",
   group  => "ubuntu",
-  mode   => 755,
+  mode   => 777,
   before => Class['build']
 }
 
