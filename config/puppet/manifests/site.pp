@@ -51,6 +51,22 @@ file { "/var/log/ffmpeg":
   before => Class['build']
 }
 
+file { "/var/log/record_record_done.log":
+  ensure => "file",
+  owner  => "ubuntu",
+  group  => "ubuntu",
+  mode   => 777,
+  before => Class['build']
+}
+
+file { "/var/log/stream_record_done.log":
+  ensure => "file",
+  owner  => "ubuntu",
+  group  => "ubuntu",
+  mode   => 777,
+  before => Class['build']
+}
+
 class aws {
   file { "/home/ubuntu/.aws":
     ensure => "directory",
