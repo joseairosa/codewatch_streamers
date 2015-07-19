@@ -173,34 +173,34 @@ class vod {
     cwd     => '/home/ubuntu/downloads',
     command => '/usr/bin/gitp clone https://github.com/s3fs-fuse/s3fs-fuse',
     creates => "/home/ubuntu/downloads/s3fs-fuse"  ,
-    before  => Exec['s3f3 ./autogen.sh']
+    before  => Exec['s3fs ./autogen.sh']
   }
 
-  exec { 's3f3 ./autogen.sh':
+  exec { 's3fs ./autogen.sh':
     cwd     => '/home/ubuntu/downloads/s3fs-fuse',
     command => '/home/ubuntu/downloads/s3fs-fuse/autogen.sh',
-    require => Exec['clone s3f3'],
-    before  => Exec['s3f3 ./configure']
+    require => Exec['clone s3fs'],
+    before  => Exec['s3fs ./configure']
   }
 
-  exec { 's3f3 ./configure':
+  exec { 's3fs ./configure':
     cwd     => '/home/ubuntu/downloads/s3fs-fuse',
     command => '/usr/bin/env sudo /home/ubuntu/downloads/s3fs-fuse/configure --prefix=/usr --with-openssl',
-    require => Exec['s3f3 ./autogen.sh'],
-    before  => Exec['s3f3 ./configure']
+    require => Exec['s3fs ./autogen.sh'],
+    before  => Exec['s3fs ./configure']
   }
 
-  exec { 'make s3f3':
+  exec { 'make s3fs':
     cwd     => '/home/ubuntu/downloads/s3fs-fuse',
     command => '/usr/bin/env sudo make',
-    require => Exec['s3f3 ./configure'],
-    before  => Exec['make install s3f3']
+    require => Exec['s3fs ./configure'],
+    before  => Exec['make install s3fs']
   }
 
-  exec { 'make install s3f3':
+  exec { 'make install s3fs':
     cwd     => '/home/ubuntu/downloads/s3fs-fuse',
     command => '/usr/bin/env sudo make install',
-    require => Exec['make s3f3']
+    require => Exec['make s3fs']
   }
 }
 
