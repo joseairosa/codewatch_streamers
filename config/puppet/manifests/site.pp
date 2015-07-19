@@ -62,7 +62,7 @@ class build {
   }
 
   file { "/etc/init.d/nginx":
-    content => template('nginx_service.erb'),
+    content => template('nginx_service'),
     before  => Exec['restart nginx']
   }
 
