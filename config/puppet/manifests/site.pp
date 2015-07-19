@@ -125,7 +125,8 @@ class s3fs {
 
 class mount_s3fs {
   exec { 'unmount s3fs':
-    command => '/usr/bin/env sudo fusermount -u /mnt/s3',
+    command => '/usr/bin/env sudo fusermount -q -u /mnt/s3',
+    creates => '/mnt/s3',
     require => Class['s3fs'],
     before => File['/mnt/s3']
   }

@@ -15,7 +15,7 @@ def find_servers
 end
 
 def find_load_balancer_servers
-  @load_balancers ||= fog.servers.select { |s| s.tags['Group'] == 'load-balancer' }
+  @load_balancers ||= fog.servers.select { |s| s.tags['Group'] == 'lb' }
 end
 
 def find_vod_servers
@@ -30,17 +30,17 @@ def servers_to_update
     else
       raise ArgumentError, 'ServerNotFound'
     end
-  elsif ENV['server_type']
-    case ENV['server_type']
-      when 'streamer'
+  else
+    case fetch(:stage)
+      when :streamer
         find_servers.map { |s| "#{fetch(:user)}@#{s.dns_name}" }
-      when 'load_balancer'
+      when :load_balancer
         find_load_balancer_servers.map { |s| "#{fetch(:user)}@#{s.dns_name}" }
-      when 'vod'
+      when :vod
         find_vod_servers.map { |s| "#{fetch(:user)}@#{s.dns_name}" }
     end
-  else
-    (find_servers + find_load_balancer_servers + find_vod_servers).map { |s| "#{fetch(:user)}@#{s.dns_name}" }
+  # else
+  #   (find_servers + find_load_balancer_servers + find_vod_servers).map { |s| "#{fetch(:user)}@#{s.dns_name}" }
   end
 end
 

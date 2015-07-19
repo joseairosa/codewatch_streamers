@@ -28,7 +28,7 @@ namespace :server do
       execute 'sudo add-apt-repository -y ppa:mc3man/trusty-media'
       execute 'sudo apt-get update'
       execute 'sudo apt-get -y upgrade'
-      execute 'sudo apt-get -y install git puppet locate build-essential libpcre3 libpcre3-dev libssl-dev unzip yasm libass-dev software-properties-common python-pip libxml2 libxml2-dev libxslt1-dev vim htop libav-tools libavcodec-extra-54 libavformat-extra-54 ffmpeg gstreamer0.10-ffmpeg yamdi imagemagick automake libfuse-dev libcurl4-openssl-dev libxml++2.6-dev libssl-dev'
+      execute 'sudo apt-get -y install git puppet locate build-essential libpcre3 libpcre3-dev libssl-dev unzip yasm libass-dev software-properties-common python-pip libxml2 libxml2-dev libxslt1-dev vim htop libav-tools libavcodec-extra-54 libavformat-extra-54 ffmpeg gstreamer0.10-ffmpeg yamdi imagemagick automake libfuse-dev libcurl4-openssl-dev libxml++2.6-dev libssl-dev  automake libtool pkg-config'
       execute 'sudo puppet module install --force maestrodev-wget'
       execute 'sudo chown ubuntu:ubuntu /etc/puppet'
     end
