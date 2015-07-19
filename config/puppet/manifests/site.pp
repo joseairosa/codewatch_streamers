@@ -141,7 +141,7 @@ class mount_s3fs {
 
   exec { 'mount s3fs':
     command => '/usr/bin/env sudo /usr/bin/s3fs codewatch-tv /mnt/s3 -o use_rrs -o allow_other -o use_cache=/tmp',
-    require => Exec["/mnt/s3"]
+    require => File["/mnt/s3"]
   }
 }
 
