@@ -4,9 +4,13 @@ def find_servers
   @servers ||= fog.servers.select { |s| s.tags['Name'] == 'streamer' }
 end
 
+def find_load_balancers
+  @load_balancers ||= fog.servers.select { |s| s.tags['Name'] == 'load-balancer' }
+end
+
 def servers_to_update
   if ENV['server_to_update']
-    server = find_servers.find { |s| s.dns_name == ENV['server_to_update']}
+    server = (find_servers + find_load_balancers).find { |s| s.dns_name == ENV['server_to_update']}
     if server
       return ["ubuntu@#{server.dns_name}"]
     else

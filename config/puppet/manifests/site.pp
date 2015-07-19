@@ -97,7 +97,7 @@ class build {
   }
 
   file { "/usr/local/nginx/conf/nginx.conf":
-    content => template('nginx.conf.erb'),
+    content => template($cap_nginx_conf),
     before  => Exec['restart nginx']
   }
 

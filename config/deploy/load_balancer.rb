@@ -1,17 +1,17 @@
 set :nginx_conf, 'lb_nginx.conf'
 
 namespace :server do
-  desc 'Spawns a new streamer server'
+  desc 'Spawns a new load balancer server'
   task :spawn do
     server = fog.servers.create(
         image_id: 'ami-47a23a30', # ubuntu 14.04
-        flavor_id: 'c4.xlarge',
-        security_group_ids: ['sg-22f9f347'],
+        flavor_id: 't2.medium',
+        security_group_ids: ['sg-71b3b914'],
         key_name: fetch(:key_pair),
         vpc_id: 'vpc-14dd5271',
         subnet_id: 'subnet-15bdc570',
         availability_zone: 'eu-west-1b',
-        tags: {'Name' => 'streamer'}
+        tags: {'Name' => 'load-balancer'}
     )
 
     # wait for it to get online
