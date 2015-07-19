@@ -242,15 +242,15 @@ class streamer {
 
   file { "/usr/local/bin/stream_record_done.sh":
     content => template('stream_record_done.sh'),
-    owner   => "nginx",
-    group   => "nginx",
+    owner   => "root",
+    group   => "root",
     mode    => 755
   }
 
   file { "/usr/local/bin/record_record_done.sh":
     content => template('record_record_done.sh'),
-    owner   => "nginx",
-    group   => "nginx",
+    owner   => "root",
+    group   => "root",
     mode    => 755
   }
 }
