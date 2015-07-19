@@ -185,14 +185,14 @@ class vod {
 
   exec { 's3f3 ./configure':
     cwd     => '/home/ubuntu/downloads/s3fs-fuse',
-    command => '/home/ubuntu/downloads/s3fs-fuse/configure --prefix=/usr --with-openssl',
+    command => '/usr/bin/env sudo /home/ubuntu/downloads/s3fs-fuse/configure --prefix=/usr --with-openssl',
     require => Exec['s3f3 ./autogen.sh'],
     before  => Exec['s3f3 ./configure']
   }
 
   exec { 'make s3f3':
     cwd     => '/home/ubuntu/downloads/s3fs-fuse',
-    command => 'make',
+    command => '/usr/bin/env sudo make',
     require => Exec['s3f3 ./configure'],
     before  => Exec['make install s3f3']
   }
