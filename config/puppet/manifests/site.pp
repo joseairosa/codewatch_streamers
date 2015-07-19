@@ -81,18 +81,21 @@ class build {
   exec { 'configure nginx':
     cwd     => '/home/ubuntu/downloads/nginx-1.8.0',
     command => '/usr/bin/env sudo /home/ubuntu/downloads/nginx-1.8.0/configure --with-http_xslt_module --with-http_ssl_module --add-module=/home/ubuntu/downloads/nginx-rtmp-module-master',
+    require => Exec['unpack nginx-1.8.0.tar.gz'],
     before  => Exec["make nginx"]
   }
 
   exec { 'make nginx':
     cwd     => '/home/ubuntu/downloads/nginx-1.8.0',
     command => '/usr/bin/env sudo make',
+    require => Exec['configure nginx'],
     before  => Exec["make install nginx"]
   }
 
   exec { 'make install nginx':
     cwd     => '/home/ubuntu/downloads/nginx-1.8.0',
     command => '/usr/bin/env sudo make install',
+    require => Exec['make nginx'],
     before  => File["/usr/local/nginx/conf/nginx.conf"]
   }
 
