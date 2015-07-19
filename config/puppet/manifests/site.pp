@@ -98,6 +98,7 @@ class build {
 
   file { "/usr/local/nginx/conf/nginx.conf":
     content => template($cap_nginx_conf),
+    require => Exec['make install nginx'],
     before  => Exec['restart nginx']
   }
 
@@ -106,6 +107,7 @@ class build {
     owner   => "ubuntu",
     group   => "ubuntu",
     mode    => 755,
+    require => Exec['make install nginx'],
     before  => Exec['restart nginx']
   }
 
@@ -114,6 +116,7 @@ class build {
     owner   => "ubuntu",
     group   => "ubuntu",
     mode    => 755,
+    require => Exec['make install nginx'],
     before  => Exec['restart nginx']
   }
 
