@@ -125,6 +125,7 @@ class build {
 
   file { "/etc/init.d/nginx":
     content => template('nginx_service'),
+    mode    => 755,
     before  => Exec['restart nginx']
   }
 
