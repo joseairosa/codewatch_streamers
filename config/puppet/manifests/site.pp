@@ -143,7 +143,7 @@ class mount_s3fs {
   file { '/etc/fstab':
     content => template('fstab'),
     require => Class['s3fs'],
-    before => File['/mnt/s3']
+    before => Exec['unmount s3fs']
   }
 
   exec { 'unmount s3fs':
