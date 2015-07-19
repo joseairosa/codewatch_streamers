@@ -1,4 +1,5 @@
 require 'capistrano/puppetize'
+require 'bazaar'
 
 def fog
   @fog ||= Fog::Compute.new(
@@ -10,15 +11,15 @@ def fog
 end
 
 def find_servers
-  @servers ||= fog.servers.select { |s| s.tags['Name'] == 'streamer' }
+  @servers ||= fog.servers.select { |s| s.tags['Group'] == 'streamer' }
 end
 
 def find_load_balancer_servers
-  @load_balancers ||= fog.servers.select { |s| s.tags['Name'] == 'load-balancer' }
+  @load_balancers ||= fog.servers.select { |s| s.tags['Group'] == 'load-balancer' }
 end
 
 def find_vod_servers
-  @vod ||= fog.servers.select { |s| s.tags['Name'] == 'vod' }
+  @vod ||= fog.servers.select { |s| s.tags['Group'] == 'vod' }
 end
 
 def servers_to_update

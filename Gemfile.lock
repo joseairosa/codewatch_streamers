@@ -9,6 +9,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     CFPropertyList (2.3.1)
+    bazaar (0.0.2)
     builder (3.2.2)
     byebug (5.0.0)
       columnize (= 0.9.0)
@@ -147,6 +148,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bazaar
   capistrano (~> 3.1)
   capistrano-ext-puppetize!
   fog

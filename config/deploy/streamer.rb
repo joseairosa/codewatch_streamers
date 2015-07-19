@@ -11,7 +11,7 @@ namespace :server do
         vpc_id: 'vpc-14dd5271',
         subnet_id: 'subnet-15bdc570',
         availability_zone: 'eu-west-1b',
-        tags: {'Name' => 'streamer'}
+        tags: {'Name' => Bazaar.heroku, 'Group' => 'streamer'}
     )
 
     # wait for it to get online
