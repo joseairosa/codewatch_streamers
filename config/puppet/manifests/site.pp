@@ -140,9 +140,8 @@ class s3fs {
 }
 
 class mount_s3fs {
-  exec { 'unmount s3fs':
-    command => '/usr/bin/env sudo fusermount -q -u /mnt/s3',
-    creates => '/mnt/s3',
+  file { '/etc/fstab':
+    content => template('fstab'),
     require => Class['s3fs'],
     before => File['/mnt/s3']
   }
@@ -152,13 +151,19 @@ class mount_s3fs {
     owner  => "ubuntu",
     group  => "ubuntu",
     mode   => 755,
-    require => Exec['unmount s3fs'],
-    before => Exec['mount s3fs']
+    require => File['/etc/fstab'],
+    before => Exec['unmount s3fs']
+  }
+
+  exec { 'unmount s3fs':
+    command => '/usr/bin/env sudo fusermount -q -u /mnt/s3',
+    require => File['/mnt/s3'],
+    before => Exec['/mnt/s3']
   }
 
   exec { 'mount s3fs':
-    command => '/usr/bin/env sudo /usr/bin/s3fs codewatch-tv /mnt/s3 -o use_rrs -o allow_other -o use_cache=/tmp',
-    require => File["/mnt/s3"]
+    command => '/usr/bin/env sudo mount -a',
+    require => File["unmount s3fs"]
   }
 }
 
@@ -250,7 +255,6 @@ class build {
     require => File['/usr/local/nginx/conf/nginx.conf']
   }
 }
-
 
 class streamer {
   include build
