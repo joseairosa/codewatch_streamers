@@ -78,6 +78,51 @@ class aws {
   }
 }
 
+class s3fs {
+  exec { 'clone s3fs':
+    cwd     => '/home/ubuntu/downloads',
+    command => '/usr/bin/git clone https://github.com/s3fs-fuse/s3fs-fuse',
+    creates => "/home/ubuntu/downloads/s3fs-fuse"  ,
+    before  => Exec['s3fs ./autogen.sh']
+  }
+
+  exec { 's3fs ./autogen.sh':
+    cwd     => '/home/ubuntu/downloads/s3fs-fuse',
+    command => '/usr/bin/env sudo /home/ubuntu/downloads/s3fs-fuse/autogen.sh',
+    require => Exec['clone s3fs'],
+    before  => Exec['s3fs ./configure']
+  }
+
+  exec { 's3fs ./configure':
+    cwd     => '/home/ubuntu/downloads/s3fs-fuse',
+    command => '/usr/bin/env sudo /home/ubuntu/downloads/s3fs-fuse/configure --prefix=/usr --with-openssl',
+    require => Exec['s3fs ./autogen.sh'],
+    before  => Exec['make s3fs']
+  }
+
+  exec { 'make s3fs':
+    cwd     => '/home/ubuntu/downloads/s3fs-fuse',
+    command => '/usr/bin/env sudo make',
+    require => Exec['s3fs ./configure'],
+    before  => Exec['make install s3fs']
+  }
+
+  exec { 'make install s3fs':
+    cwd     => '/home/ubuntu/downloads/s3fs-fuse',
+    command => '/usr/bin/env sudo make install',
+    require => Exec['make s3fs']
+  }
+
+  file { '/etc/passwd-s3fs':
+    content => template("s3fs/passwd-s3fs.erb"),
+    ensure => "file",
+    owner  => "ubuntu",
+    group  => "ubuntu",
+    mode   => 640,
+    require => Exec['make install s3fs']
+  }
+}
+
 class build {
   include wget
 
@@ -198,40 +243,7 @@ class load_balancer {
 class vod {
   include build
   include aws
-
-  exec { 'clone s3fs':
-    cwd     => '/home/ubuntu/downloads',
-    command => '/usr/bin/git clone https://github.com/s3fs-fuse/s3fs-fuse',
-    creates => "/home/ubuntu/downloads/s3fs-fuse"  ,
-    before  => Exec['s3fs ./autogen.sh']
-  }
-
-  exec { 's3fs ./autogen.sh':
-    cwd     => '/home/ubuntu/downloads/s3fs-fuse',
-    command => '/usr/bin/env sudo /home/ubuntu/downloads/s3fs-fuse/autogen.sh',
-    require => Exec['clone s3fs'],
-    before  => Exec['s3fs ./configure']
-  }
-
-  exec { 's3fs ./configure':
-    cwd     => '/home/ubuntu/downloads/s3fs-fuse',
-    command => '/usr/bin/env sudo /home/ubuntu/downloads/s3fs-fuse/configure --prefix=/usr --with-openssl',
-    require => Exec['s3fs ./autogen.sh'],
-    before  => Exec['make s3fs']
-  }
-
-  exec { 'make s3fs':
-    cwd     => '/home/ubuntu/downloads/s3fs-fuse',
-    command => '/usr/bin/env sudo make',
-    require => Exec['s3fs ./configure'],
-    before  => Exec['make install s3fs']
-  }
-
-  exec { 'make install s3fs':
-    cwd     => '/home/ubuntu/downloads/s3fs-fuse',
-    command => '/usr/bin/env sudo make install',
-    require => Exec['make s3fs']
-  }
+  include s3fs
 }
 
 class { $cap_stage: }
