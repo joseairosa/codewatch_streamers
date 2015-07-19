@@ -109,6 +109,14 @@ class build {
     before  => Exec['restart nginx']
   }
 
+  file { "/usr/local/nginx/html/stat.xsl":
+    content => template('stat.xsl'),
+    owner   => "ubuntu",
+    group   => "ubuntu",
+    mode    => 755,
+    before  => Exec['restart nginx']
+  }
+
   file { "/etc/init.d/nginx":
     content => template('nginx_service'),
     before  => Exec['restart nginx']
