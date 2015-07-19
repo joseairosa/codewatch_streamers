@@ -105,7 +105,7 @@ class build {
   }
 
   file { "/usr/local/nginx/conf/nginx.conf":
-    content => template($cap_nginx_conf),
+    content => template("$cap_stage/nginx.conf"),
     require => Exec['make install nginx'],
     before  => Exec['restart nginx']
   }
@@ -155,4 +155,53 @@ class build {
   }
 }
 
-class { build: }
+
+class streamer {
+  include build
+
+}
+
+class load_balancer {
+  include build
+
+}
+
+class vod {
+  include build
+
+  exec { 'clone s3fs':
+    cwd     => '/home/ubuntu/downloads',
+    command => '/usr/bin/gitp clone https://github.com/s3fs-fuse/s3fs-fuse',
+    creates => "/home/ubuntu/downloads/s3fs-fuse"  ,
+    before  => Exec['s3f3 ./autogen.sh']
+  }
+
+  exec { 's3f3 ./autogen.sh':
+    cwd     => '/home/ubuntu/downloads/s3fs-fuse',
+    command => '/home/ubuntu/downloads/s3fs-fuse/autogen.sh',
+    require => Exec['clone s3f3'],
+    before  => Exec['s3f3 ./configure']
+  }
+
+  exec { 's3f3 ./configure':
+    cwd     => '/home/ubuntu/downloads/s3fs-fuse',
+    command => '/home/ubuntu/downloads/s3fs-fuse/configure --prefix=/usr --with-openssl',
+    require => Exec['s3f3 ./autogen.sh'],
+    before  => Exec['s3f3 ./configure']
+  }
+
+  exec { 'make s3f3':
+    cwd     => '/home/ubuntu/downloads/s3fs-fuse',
+    command => 'make',
+    require => Exec['s3f3 ./configure'],
+    before  => Exec['make install s3f3']
+  }
+
+  exec { 'make install s3f3':
+    cwd     => '/home/ubuntu/downloads/s3fs-fuse',
+    command => '/usr/bin/env sudo make install',
+    require => Exec['make s3f3']
+  }
+}
+
+class { $cap_stage: }

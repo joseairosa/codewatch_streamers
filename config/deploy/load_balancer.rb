@@ -1,4 +1,4 @@
-set :nginx_conf, 'lb_nginx.conf'
+set :stage, 'load_balancer'
 
 namespace :server do
   desc 'Spawns a new load balancer server'
@@ -25,15 +25,12 @@ namespace :server do
     on roles(:app) do
       execute 'sudo locale-gen en_GB en_GB.UTF-8'
       execute 'sudo dpkg-reconfigure locales'
-      # execute 'sudo add-apt-repository -y ppa:nginx/stable'
       execute 'sudo add-apt-repository -y ppa:mc3man/trusty-media'
       execute 'sudo apt-get update'
       execute 'sudo apt-get -y upgrade'
       execute 'sudo apt-get -y install git puppet locate build-essential libpcre3 libpcre3-dev libssl-dev unzip yasm libass-dev software-properties-common python-pip libxml2 libxml2-dev libxslt1-dev vim htop libav-tools libavcodec-extra-54 libavformat-extra-54 ffmpeg gstreamer0.10-ffmpeg'
-      # execute 'sudo apt-get -y install nginx=1.8.0-1+trusty1'
       execute 'sudo puppet module install --force maestrodev-wget'
       execute 'sudo chown ubuntu:ubuntu /etc/puppet'
-      # execute 'sudo service nginx stop'
     end
   end
 

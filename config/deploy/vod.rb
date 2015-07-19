@@ -1,4 +1,4 @@
-set :nginx_conf, 'vod_nginx.conf'
+set :stage, 'vod'
 
 namespace :server do
   desc 'Spawns a new streamer server'
