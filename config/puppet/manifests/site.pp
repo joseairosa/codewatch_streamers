@@ -1,21 +1,41 @@
-user { 'streamer':
-  name    => 'streamer',
-  groups  => ["ubuntu"],
-  home    => '/home/streamer'
+file { "/var/images":
+  ensure => "directory",
+  owner  => "ubuntu",
+  group  => "ubuntu",
+  mode   => 755,
+  before => Class['build']
 }
 
-file { "/home/streamer":
+file { "/var/images/stream_thumbnails":
   ensure => "directory",
-  owner  => "streamer",
+  owner  => "ubuntu",
   group  => "ubuntu",
-  mode   => 755
+  mode   => 755,
+  before => Class['build']
 }
 
-file { "/home/streamer/downloads":
+file { "/var/images/recording_thumbnails":
   ensure => "directory",
-  owner  => "streamer",
+  owner  => "ubuntu",
   group  => "ubuntu",
-  mode   => 755
+  mode   => 755 ,
+  before => Class['build']
+}
+
+file { "/var/recordings":
+  ensure => "directory",
+  owner  => "ubuntu",
+  group  => "ubuntu",
+  mode   => 755 ,
+  before => Class['build']
+}
+
+file { "/home/ubuntu/downloads":
+  ensure => "directory",
+  owner  => "ubuntu",
+  group  => "ubuntu",
+  mode   => 755 ,
+  before => Class['build']
 }
 
 class build {
@@ -63,6 +83,16 @@ class build {
 
   file { "/etc/init.d/nginx":
     content => template('nginx_service'),
+    before  => Exec['restart nginx']
+  }
+
+  file { "/usr/local/bin/stream_record_done.sh":
+    content => template('stream_record_done.sh'),
+    before  => Exec['restart nginx']
+  }
+
+  file { "/usr/local/bin/record_record_done.sh":
+    content => template('record_record_done.sh'),
     before  => Exec['restart nginx']
   }
 
