@@ -30,6 +30,7 @@ namespace :server do
       execute 'sudo apt-get -y upgrade'
       execute 'sudo apt-get -y install git puppet locate build-essential libpcre3 libpcre3-dev libssl-dev unzip yasm libass-dev software-properties-common python-pip libxml2 libxml2-dev libxslt1-dev vim htop libav-tools libavcodec-extra-54 libavformat-extra-54 ffmpeg gstreamer0.10-ffmpeg yamdi imagemagick libfuse-dev libcurl4-openssl-dev libxml2-dev mime-support automake libtool pkg-config'
       execute 'sudo puppet module install --force maestrodev-wget'
+      execute 'sudo pip install awscli'
       execute 'sudo chown ubuntu:ubuntu /etc/puppet'
     end
   end
