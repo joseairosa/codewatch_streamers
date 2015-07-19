@@ -257,7 +257,6 @@ class streamer {
 class load_balancer {
   include build
   include aws
-
 }
 
 class vod {
