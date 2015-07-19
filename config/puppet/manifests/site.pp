@@ -51,6 +51,33 @@ file { "/var/log/ffmpeg":
   before => Class['build']
 }
 
+class aws {
+  file { "/home/ubuntu/.aws":
+    ensure => "directory",
+    owner  => "ubuntu",
+    group  => "ubuntu",
+    mode   => 775
+  }
+
+  file { "/home/ubuntu/.aws/config":
+    content => template("aws/config.erb"),
+    ensure => "file",
+    owner  => "ubuntu",
+    group  => "ubuntu",
+    mode   => 777,
+    before => Class['build']
+  }
+
+  file { "/home/ubuntu/.aws/credentials":
+    content => template("aws/credentials.erb"),
+    ensure => "file",
+    owner  => "ubuntu",
+    group  => "ubuntu",
+    mode   => 777,
+    before => Class['build']
+  }
+}
+
 class build {
   include wget
 
@@ -158,16 +185,19 @@ class build {
 
 class streamer {
   include build
+  include aws
 
 }
 
 class load_balancer {
   include build
+  include aws
 
 }
 
 class vod {
   include build
+  include aws
 
   exec { 'clone s3fs':
     cwd     => '/home/ubuntu/downloads',
@@ -178,7 +208,7 @@ class vod {
 
   exec { 's3fs ./autogen.sh':
     cwd     => '/home/ubuntu/downloads/s3fs-fuse',
-    command => '/home/ubuntu/downloads/s3fs-fuse/autogen.sh',
+    command => '/usr/bin/env sudo /home/ubuntu/downloads/s3fs-fuse/autogen.sh',
     require => Exec['clone s3fs'],
     before  => Exec['s3fs ./configure']
   }

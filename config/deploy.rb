@@ -44,6 +44,9 @@ def servers_to_update
   end
 end
 
+set :region, ENV['region'] || 'eu-west-1b'
+set :codewatch_aws_access_key_id, ENV['CODEWATCH_INSTANCE_AWS_ACCESS_KEY_ID']
+set :codewatch_aws_secret_access_key, ENV['CODEWATCH_INSTANCE_AWS_SECRET_ACCESS_KEY']
 set :application, 'codewatch_streamer'
 set :user, 'ubuntu'
 set :deploy_to, "/home/#{fetch(:user)}/#{fetch(:application)}"

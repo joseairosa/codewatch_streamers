@@ -1,6 +1,15 @@
 # codewatch_streamers
 Setup for streamers
 
+## Required environment variables
+
+```
+export CODEWATCH_AWS_ACCESS_KEY_ID=
+export CODEWATCH_AWS_SECRET_ACCESS_KEY=
+export CODEWATCH_INSTANCE_AWS_ACCESS_KEY_ID=
+export CODEWATCH_INSTANCE_AWS_SECRET_ACCESS_KEY=
+```
+
 ## Spawn server
 
 ```

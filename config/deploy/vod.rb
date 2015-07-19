@@ -10,7 +10,7 @@ namespace :server do
         key_name: fetch(:key_pair),
         vpc_id: 'vpc-14dd5271',
         subnet_id: 'subnet-15bdc570',
-        availability_zone: 'eu-west-1b',
+        availability_zone: fetch(:region),
         tags: {'Name' => Bazaar.heroku, 'Group' => 'vod'}
     )
 
@@ -28,7 +28,7 @@ namespace :server do
       execute 'sudo add-apt-repository -y ppa:mc3man/trusty-media'
       execute 'sudo apt-get update'
       execute 'sudo apt-get -y upgrade'
-      execute 'sudo apt-get -y install git puppet locate build-essential libpcre3 libpcre3-dev libssl-dev unzip yasm libass-dev software-properties-common python-pip libxml2 libxml2-dev libxslt1-dev vim htop libav-tools libavcodec-extra-54 libavformat-extra-54 ffmpeg gstreamer0.10-ffmpeg yamdi imagemagick'
+      execute 'sudo apt-get -y install git puppet locate build-essential libpcre3 libpcre3-dev libssl-dev unzip yasm libass-dev software-properties-common python-pip libxml2 libxml2-dev libxslt1-dev vim htop libav-tools libavcodec-extra-54 libavformat-extra-54 ffmpeg gstreamer0.10-ffmpeg yamdi imagemagick automake libfuse-dev libcurl4-openssl-dev libxml++2.6-dev libssl-dev'
       execute 'sudo puppet module install --force maestrodev-wget'
       execute 'sudo chown ubuntu:ubuntu /etc/puppet'
     end
