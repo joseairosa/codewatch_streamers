@@ -146,18 +146,9 @@ class mount_s3fs {
     before => File['/mnt/s3']
   }
 
-  file { "/mnt/s3":
-    ensure => "directory",
-    owner  => "ubuntu",
-    group  => "ubuntu",
-    mode   => 755,
-    require => File['/etc/fstab'],
-    before => Exec['unmount s3fs']
-  }
-
   exec { 'unmount s3fs':
     command => '/usr/bin/env sudo fusermount -q -u /mnt/s3',
-    require => File['/mnt/s3'],
+    require => File['/etc/fstab'],
     before => Exec['mount s3fs']
   }
 
