@@ -95,6 +95,9 @@ class build {
 
   file { "/usr/local/nginx/html/nclients.xsl":
     content => template('nclients.xsl'),
+    owner  => "ubuntu",
+    group  => "ubuntu",
+    mode   => 755,
     before  => Exec['restart nginx']
   }
 
@@ -105,11 +108,17 @@ class build {
 
   file { "/usr/local/bin/stream_record_done.sh":
     content => template('stream_record_done.sh'),
+    owner  => "ubuntu",
+    group  => "ubuntu",
+    mode   => 755,
     before  => Exec['restart nginx']
   }
 
   file { "/usr/local/bin/record_record_done.sh":
     content => template('record_record_done.sh'),
+    owner  => "ubuntu",
+    group  => "ubuntu",
+    mode   => 755,
     before  => Exec['restart nginx']
   }
 
