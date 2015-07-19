@@ -161,6 +161,17 @@ class build {
     before  => Exec['restart nginx']
   }
 
+  exec { 'restart nginx':
+    command => '/usr/bin/env sudo /usr/sbin/service nginx restart',
+    require => File['/usr/local/nginx/conf/nginx.conf']
+  }
+}
+
+
+class streamer {
+  include build
+  include aws
+
   file { "/usr/local/bin/stream_record_done.sh":
     content => template('stream_record_done.sh'),
     owner   => "ubuntu",
@@ -176,17 +187,6 @@ class build {
     mode    => 755,
     before  => Exec['restart nginx']
   }
-
-  exec { 'restart nginx':
-    command => '/usr/bin/env sudo /usr/sbin/service nginx restart',
-  }
-}
-
-
-class streamer {
-  include build
-  include aws
-
 }
 
 class load_balancer {
