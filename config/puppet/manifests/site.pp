@@ -171,7 +171,7 @@ class vod {
 
   exec { 'clone s3fs':
     cwd     => '/home/ubuntu/downloads',
-    command => '/usr/bin/gitp clone https://github.com/s3fs-fuse/s3fs-fuse',
+    command => '/usr/bin/git clone https://github.com/s3fs-fuse/s3fs-fuse',
     creates => "/home/ubuntu/downloads/s3fs-fuse"  ,
     before  => Exec['s3fs ./autogen.sh']
   }
