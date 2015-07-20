@@ -1,5 +1,4 @@
 set :stage, 'streamer'
-set :ffmpeg_options, ffmpeg_options
 
 def ffmpeg_options
   options = ['-re -threads 0 -i rtmp://localhost/stream/$name']
@@ -10,6 +9,8 @@ def ffmpeg_options
   options << '2>>/var/log/ffmpeg/ffmpeg-$name.log;'
   options.join(' ')
 end
+
+set :ffmpeg_options, ffmpeg_options
 
 namespace :server do
   desc 'Spawns a new streamer server'

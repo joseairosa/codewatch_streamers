@@ -212,7 +212,7 @@ class build {
   }
 
   file { "/usr/local/nginx/conf/nginx.conf":
-    content => template("$cap_stage/nginx.conf"),
+    content => template("$cap_stage/nginx.conf.erb"),
     require => Exec['make install nginx'],
     before  => Exec['restart nginx']
   }
