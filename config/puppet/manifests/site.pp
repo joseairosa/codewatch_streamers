@@ -67,6 +67,12 @@ file { "/var/log/stream_record_done.log":
   before => Class['build']
 }
 
+class newrelic_monitoring {
+  class {'newrelic::server::linux':
+    newrelic_license_key => "$cap_newrelic",
+  }
+}
+
 class aws {
   file { "/home/ubuntu/.aws":
     ensure => "directory",
@@ -249,6 +255,7 @@ class build {
 
 class streamer {
   include build
+  include newrelic_monitoring
   include aws
 
   file { "/usr/local/bin/stream_record_done.sh":
@@ -268,11 +275,13 @@ class streamer {
 
 class load_balancer {
   include build
+  include newrelic_monitoring
   include aws
 }
 
 class vod {
   include build
+  include newrelic_monitoring
   include aws
   include s3fs
   include mount_s3fs

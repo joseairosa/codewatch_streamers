@@ -44,6 +44,7 @@ def servers_to_update
   end
 end
 
+set :newrelic, ENV['CODEWATCH_NEWRELIC']
 set :region, ENV['region'] || 'eu-west-1'
 set :instance_region, ENV['instance_region'] || 'eu-west-1b'
 set :codewatch_aws_access_key_id, ENV['CODEWATCH_INSTANCE_AWS_ACCESS_KEY_ID']
