@@ -1,2 +1,2 @@
 LABEL=cloudimg-rootfs   /        ext4   defaults,discard        0 0
-s3fs#codewatch-tv  /mnt/s3     fuse    defaults,noatime,rw,allow_other,uid=1001,gid=1001,use_cache=/tmp,default_acl=public-read 0 2
+s3fs#codewatch-tv  /mnt/s3     fuse    defaults,noatime,rw,allow_other,uid=ubuntu,gid=ubuntu,use_cache=/tmp,default_acl=public-read 0 2
