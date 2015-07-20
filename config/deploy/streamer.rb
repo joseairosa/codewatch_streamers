@@ -1,12 +1,12 @@
 set :stage, 'streamer'
 
 def ffmpeg_options
-  options = ['-re -threads 0 -i rtmp://localhost/stream/$$name']
-  options << '-crf 28 -g 60 -preset veryfast -c:v libx264 -profile:v main -b:v 1920K -maxrate 1920K -bufsize 1920K -s 1920x1080 -f flv -c:a aac -ac 1 -strict -2 -b:a 128k rtmp://localhost/watch/$$name@1080p'
-  options << '-crf 28 -g 60 -preset veryfast -c:v libx264 -profile:v main -b:v 960K -maxrate 960K -bufsize 960K -s 1280x720 -f flv -c:a aac -ac 1 -strict -2 -b:a 128k rtmp://localhost/watch/$$name@720p'
-  options << '-crf 28 -g 60 -preset veryfast -c:v libx264 -profile:v main -b:v 480K -maxrate 480K -bufsize 480K -s 640x360 -f flv -c:a aac -ac 1 -strict -2 -b:a 56k rtmp://localhost/watch/$$name@320p'
-  options << '-crf 28 -g 60 -preset veryfast -c:v libx264 -profile:v main -b:v 240K -maxrate 240K -bufsize 240K -s 320x180 -f flv -c:a aac -ac 1 -strict -2 -b:a 56k rtmp://localhost/watch/$$name@180p'
-  options << '2>>/var/log/ffmpeg/ffmpeg-$$name.log;'
+  options = ['-re -threads 0 -i rtmp://localhost/stream/\\$name']
+  options << "-crf 28 -g 60 -preset veryfast -c:v libx264 -profile:v main -b:v 1920K -maxrate 1920K -bufsize 1920K -s 1920x1080 -f flv -c:a aac -ac 1 -strict -2 -b:a 128k rtmp://localhost/watch/\\$name@1080p"
+  options << '-crf 28 -g 60 -preset veryfast -c:v libx264 -profile:v main -b:v 960K -maxrate 960K -bufsize 960K -s 1280x720 -f flv -c:a aac -ac 1 -strict -2 -b:a 128k rtmp://localhost/watch/\\$name@720p'
+  options << '-crf 28 -g 60 -preset veryfast -c:v libx264 -profile:v main -b:v 480K -maxrate 480K -bufsize 480K -s 640x360 -f flv -c:a aac -ac 1 -strict -2 -b:a 56k rtmp://localhost/watch/\\$name@320p'
+  options << '-crf 28 -g 60 -preset veryfast -c:v libx264 -profile:v main -b:v 240K -maxrate 240K -bufsize 240K -s 320x180 -f flv -c:a aac -ac 1 -strict -2 -b:a 56k rtmp://localhost/watch/\\$name@180p'
+  options << '2>>/var/log/ffmpeg/ffmpeg-\\$name.log;'
   options.join(' ')
 end
 
