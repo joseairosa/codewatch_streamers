@@ -254,6 +254,7 @@ class build {
 }
 
 class streamer {
+  include apt
   include build
   include newrelic_monitoring
   include aws
@@ -274,12 +275,14 @@ class streamer {
 }
 
 class load_balancer {
+  include apt
   include build
   include newrelic_monitoring
   include aws
 }
 
 class vod {
+  include apt
   include build
   include newrelic_monitoring
   include aws
