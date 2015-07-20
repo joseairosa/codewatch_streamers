@@ -32,6 +32,7 @@ namespace :server do
       execute 'sudo puppet module install --force maestrodev-wget'
       execute 'sudo puppet module install --force fsalum-newrelic'
       execute 'sudo puppet module install --force puppetlabs-apt'
+      execute 'sudo puppet module install --force puppetlabs-stdlib'
       execute 'sudo chown ubuntu:ubuntu /etc/puppet'
     end
   end
