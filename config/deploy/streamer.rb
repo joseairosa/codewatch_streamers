@@ -1,3 +1,5 @@
+require 'shellwords'
+
 set :stage, 'streamer'
 
 def ffmpeg_options
