@@ -90,7 +90,7 @@ rtmp {
       exec_record_done /usr/local/bin/stream_record_done.sh $name;
       on_publish http://codewatch.tv/api/v1/stream/event/publish;
       on_publish_done http://codewatch.tv/api/v1/stream/event/publish_done;
-      exec ffmpeg <%= @cap_ffmpeg_options %>
+      exec ffmpeg <%= Shellwords.escape(@cap_ffmpeg_options) %>
     }
 
     application record {
