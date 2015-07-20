@@ -255,14 +255,14 @@ class streamer {
     content => template('stream_record_done.sh'),
     owner   => "root",
     group   => "root",
-    mode    => 755
+    mode    => 777
   }
 
   file { "/usr/local/bin/record_record_done.sh":
     content => template('record_record_done.sh'),
     owner   => "root",
     group   => "root",
-    mode    => 755
+    mode    => 777
   }
 }
 
