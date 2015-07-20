@@ -6,7 +6,7 @@ namespace :server do
     server = fog.servers.create(
         image_id: 'ami-47a23a30', # ubuntu 14.04
         flavor_id: 't2.medium',
-        security_group_ids: ['sg-f75c4992'],
+        security_group_ids: ['sg-6984910c'],
         key_name: fetch(:key_pair),
         vpc_id: 'vpc-14dd5271',
         subnet_id: 'subnet-15bdc570',
