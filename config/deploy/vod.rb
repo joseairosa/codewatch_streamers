@@ -40,7 +40,12 @@ namespace :server do
   desc 'Add instance to load balancer'
   task :add_to_lb do
     on roles(:app) do
-      require 'pry'; binding.pry
+      response = lb.register_instances(servers_to_update.map(&:id), 'vod-load-balancer')
+      if (response.data[:body]['RegisterInstancesWithLoadBalancerResult']['Instances'].map(&:values).flatten & servers_to_update.map(&:id)).count == 1
+        puts 'Added successfully!'
+      else
+        puts 'Error adding!'
+      end
     end
   end
 

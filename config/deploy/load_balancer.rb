@@ -37,6 +37,18 @@ namespace :server do
     end
   end
 
+  desc 'Add instance to load balancer'
+  task :add_to_lb do
+    on roles(:app) do
+      response = lb.register_instances(servers_to_update.map(&:id), 'streamer-codewatch-tv')
+      if (response.data[:body]['RegisterInstancesWithLoadBalancerResult']['Instances'].map(&:values).flatten & servers_to_update.map(&:id)).count == 1
+        puts 'Added successfully!'
+      else
+        puts 'Error adding!'
+      end
+    end
+  end
+
   desc 'Drops a specific streamer server'
   task :drop do
     if (server = fog.servers.detect { |s| s.dns_name == ec2_address })

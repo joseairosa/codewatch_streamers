@@ -10,6 +10,14 @@ def fog
   )
 end
 
+def lb
+  @lb ||= Fog::AWS::ELB.new(
+      region: 'eu-west-1',
+      aws_access_key_id: ENV['CODEWATCH_AWS_ACCESS_KEY_ID'],
+      aws_secret_access_key: ENV['CODEWATCH_AWS_SECRET_ACCESS_KEY']
+  )
+end
+
 def find_servers
   @servers ||= fog.servers.select { |s| s.tags['Group'] == 'streamer' }
 end
@@ -26,22 +34,24 @@ def servers_to_update
   if ENV['server']
     server = (find_servers + find_load_balancer_servers + find_vod_servers).find { |s| s.dns_name == ENV['server']}
     if server
-      return ["#{fetch(:user)}@#{server.dns_name}"]
+      return [server]
     else
       raise ArgumentError, 'ServerNotFound'
     end
   else
     case fetch(:stage)
       when :streamer
-        find_servers.map { |s| "#{fetch(:user)}@#{s.dns_name}" }
+        find_servers
       when :load_balancer
-        find_load_balancer_servers.map { |s| "#{fetch(:user)}@#{s.dns_name}" }
+        find_load_balancer_servers
       when :vod
-        find_vod_servers.map { |s| "#{fetch(:user)}@#{s.dns_name}" }
+        find_vod_servers
     end
-  # else
-  #   (find_servers + find_load_balancer_servers + find_vod_servers).map { |s| "#{fetch(:user)}@#{s.dns_name}" }
   end
+end
+
+def servers_ssh
+  servers_to_update.map { |s| "#{fetch(:user)}@#{s.dns_name}" }
 end
 
 set :newrelic, ENV['CODEWATCH_NEWRELIC']
@@ -61,8 +71,8 @@ set :repo_url, 'git@github.com:joseairosa/codewatch_streamers.git' # thats a pub
 set :ssh_private_key, File.expand_path("#{ENV['HOME']}/.ssh/ec2/codewatch-streamer-ec2.pem")
 set :ssh_options, { keys: fetch(:ssh_private_key), forward_agent: true }
 
-warn "Executing actions on #{servers_to_update.join(' ')}"
+warn "Executing actions on #{servers_to_update.map(&:public_ip_address).join(' ')}"
 
 # role :app, *(streamer_server_ids)
-role :app, servers_to_update
+role :app, servers_ssh
 #%w{ubuntu@ec2-52-18-68-213.eu-west-1.compute.amazonaws.com}
