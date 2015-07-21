@@ -104,7 +104,7 @@ class s3fs {
   exec { 'clone s3fs':
     cwd     => '/home/ubuntu/downloads',
     command => '/usr/bin/git clone https://github.com/s3fs-fuse/s3fs-fuse',
-    creates => "/home/ubuntu/downloads/s3fs-fuse"  ,
+    creates => "/home/ubuntu/downloads/s3fs-fuse",
     before  => Exec['s3fs ./autogen.sh']
   }
 
@@ -146,9 +146,17 @@ class s3fs {
 }
 
 class mount_s3fs {
+  file { '/mnt/s3':
+    ensure => "directory",
+    owner  => "ubuntu",
+    group  => "ubuntu",
+    require => Class['s3fs'],
+    before => File['/etc/fstab']
+  }
+
   file { '/etc/fstab':
     content => template('fstab'),
-    require => Class['s3fs'],
+    require => File['/mnt/s3'],
     before => Exec['unmount s3fs']
   }
 
@@ -159,8 +167,7 @@ class mount_s3fs {
   }
 
   exec { 'mount s3fs':
-    command => '/usr/bin/env sudo mount -a',
-    require => Exec["unmount s3fs"]
+    command => '/usr/bin/env sudo mount -a'
   }
 }
 

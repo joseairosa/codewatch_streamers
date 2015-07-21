@@ -37,6 +37,13 @@ namespace :server do
     end
   end
 
+  desc 'Add instance to load balancer'
+  task :add_to_lb do
+    on roles(:app) do
+      require 'pry'; binding.pry
+    end
+  end
+
   desc 'Drops a specific streamer server'
   task :drop do
     if (server = fog.servers.detect { |s| s.dns_name == ec2_address })
