@@ -163,7 +163,8 @@ class mount_s3fs {
   exec { 'unmount s3fs':
     command => '/usr/bin/env sudo fusermount -q -u /mnt/s3',
     require => File['/etc/fstab'],
-    before => Exec['mount s3fs']
+    before => Exec['mount s3fs'],
+    logoutput => false
   }
 
   exec { 'mount s3fs':
