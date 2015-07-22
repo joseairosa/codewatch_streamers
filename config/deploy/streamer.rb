@@ -11,7 +11,7 @@ namespace :server do
         vpc_id: 'vpc-14dd5271',
         subnet_id: 'subnet-15bdc570',
         availability_zone: fetch(:instance_region),
-        tags: {'Name' => Bazaar.heroku, 'Group' => 'streamer'}
+        tags: {'Name' => Bazaar.heroku, 'Group' => 'streamer', 'Active' => 'no'}
     )
 
     # wait for it to get online
@@ -35,6 +35,26 @@ namespace :server do
       execute 'sudo puppet module install --force puppetlabs-stdlib'
       execute 'sudo pip install awscli'
       execute 'sudo chown ubuntu:ubuntu /etc/puppet'
+    end
+  end
+
+  desc 'Add instances to load balancer'
+  task :add_to_lb do
+    on roles(:app) do
+      servers_to_update.each do |s|
+        s.tags['Actvive'] = 'yes'
+        s.save
+      end
+    end
+  end
+
+  desc 'Remove instances from load balancer'
+  task :remove_from_lb do
+    on roles(:app) do
+      servers_to_update.each do |s|
+        s.tags['Actvive'] = 'no'
+        s.save
+      end
     end
   end
 
