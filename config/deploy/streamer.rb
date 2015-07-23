@@ -42,8 +42,7 @@ namespace :server do
   task :add_to_lb do
     on roles(:app) do
       servers_to_update.each do |s|
-        s.tags['Actvive'] = 'yes'
-        s.save
+        fog.tags.create(resource_id: s.id, key: 'Active', value: 'yes')
       end
     end
   end
@@ -52,8 +51,7 @@ namespace :server do
   task :remove_from_lb do
     on roles(:app) do
       servers_to_update.each do |s|
-        s.tags['Actvive'] = 'no'
-        s.save
+        fog.tags.create(resource_id: s.id, key: 'Active', value: 'no')
       end
     end
   end
